@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-from banner import make_banner
+from banner import display_dna_banner, display_ansi_art
 
 def main():
-    print(make_banner())
+    display_dna_banner()
+    display_ansi_art()
+
     print("Hello there!")
 
     # check if it is DNA
