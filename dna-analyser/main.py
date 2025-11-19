@@ -1,19 +1,31 @@
 #!/usr/bin/env python3
 
-from banner import display_dna_banner, display_ansi_art
+import sys
+# from pathlib import Path
 
-def main():
+from banner import display_dna_banner, display_ansi_art
+from dna_tools import read_seq_files
+
+def main(*input_files):
     display_dna_banner()
     display_ansi_art()
 
-    print("Hello there!")
+    print('\nRead and check DNA sequences:')    
+    sequences = read_seq_files(input_files)
 
-    # check if it is DNA
-    # length
-    # weight?
-    # GC content
-    # complementary strand
-    # mRNA seq
+    for seq in sequences:
+        print(seq)
+        print(f'Length: {len(sequences[seq])}')
+
+        # weight?
+        # GC content
+        # complementary strand
+        # mRNA seq
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) < 2:
+        print('DNA Analyser requires at least 1 input file\n')
+        print(f'\t{sys.argv[0]} input_file1 [ input_file2 [ input_file3 ... ] ... ]\n')
+        sys.exit(1)
+    print(sys.argv[1:])
+    main(*sys.argv[1:])
