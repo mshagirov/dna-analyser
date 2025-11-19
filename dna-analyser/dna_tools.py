@@ -25,7 +25,7 @@ def clean_input(input_text):
     return no_comment.strip().upper().replace(' ', '')
 
 def is_valid_dna(seq):
-    """Check if sequence contains only A, T, C, G"""
+    """Check if sequence contains only A, T, G, C"""
     return set('ATGC') == set(seq)
 
 def read_seq_files(file_paths):
@@ -37,13 +37,47 @@ def read_seq_files(file_paths):
         seq = clean_input(contents)
         # check if it is DNA
         if not is_valid_dna(seq):
-            print(f'❌ "{fname}" is NOT a valid DNA sequence')
+            print(f'❌ "{fname}"; NOT a valid DNA sequence!')
             continue
         else:
-            print(f'✅ "{fname}" is a valid DNA sequence.')
+            print(f'✅ "{fname}"')
         
         # add a valid seq
         sequences[fname] = seq
 
     return sequences
 
+def count_bases_withloop(seq):
+    count = {'A':0, 'T':0, 'G':0, 'C':0}
+    for base in seq:
+        count[base] += 1
+    return count
+
+def count_bases(seq):
+    return {base: seq.count(base) for base in 'ATGC'}
+
+def gc_content(base_count):
+    gc_count = base_count['G'] + base_count['C']
+    total = base_count['A'] + base_count['T'] + base_count['G'] + base_count['C']
+    return 100 * gc_count / total
+
+def at_to_gc_ratio(base_count):
+    return (base_count['A'] + base_count['T']) / (base_count['G'] + base_count['C'])
+
+# https://www.thermofisher.com/sg/en/home/references/ambion-tech-support/rna-tools-and-calculators/dna-and-rna-molecular-weights-and-conversions.html
+def calc_wight_ss(base_count):
+    weight = 313.2*base_count['A'] + \
+        304.2*base_count['T'] + \
+        329.2*base_count['G'] + \
+        289.2*base_count['C'] + 79.0
+    return weight
+
+# complementary strand
+def complementary_strand(seq):
+    convert = {'A': 'T', 'T':'A', 'G': 'C', 'C':'G'}
+    return ''.join([convert[k] for k in seq])
+
+# mRNA seq
+def transcribe_to_rna(seq):
+    convert = {'A': 'U', 'T':'A', 'G': 'C', 'C':'G'}
+    return ''.join([convert[k] for k in seq])
